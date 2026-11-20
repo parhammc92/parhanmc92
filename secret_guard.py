@@ -70,6 +70,10 @@ def scan() -> int:
             continue
         if any(part in SKIP_DIRS for part in path.parts):
             continue
+        # .env files are secrets by design and must stay gitignored —
+        # they are never committed, so skip them in the pre-commit scan.
+        if path.name == ".env" or path.name.startswith(".env."):
+            continue
         if path.suffix.lower() in SKIP_EXT:
             continue
         try:
